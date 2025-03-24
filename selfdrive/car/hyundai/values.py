@@ -108,6 +108,7 @@ class HyundaiFlagsSP(IntFlag):
   SP_CAMERA_SCC_LEAD = 2 ** 6
   SP_LKAS12 = 2 ** 7
   SP_RADAR_TRACKS = 2 ** 8
+  SP_NON_LKAS = 2 ** 9
 
 
 class Footnote(Enum):

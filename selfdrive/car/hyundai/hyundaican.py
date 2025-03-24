@@ -8,23 +8,43 @@ def create_lkas11(packer, frame, CP, apply_steer, steer_req,
                   left_lane, right_lane,
                   left_lane_depart, right_lane_depart,
                   lateral_paused, blinking_icon):
-  values = {s: lkas11[s] for s in [
-    "CF_Lkas_LdwsActivemode",
-    "CF_Lkas_LdwsSysState",
-    "CF_Lkas_SysWarning",
-    "CF_Lkas_LdwsLHWarning",
-    "CF_Lkas_LdwsRHWarning",
-    "CF_Lkas_HbaLamp",
-    "CF_Lkas_FcwBasReq",
-    "CF_Lkas_HbaSysState",
-    "CF_Lkas_FcwOpt",
-    "CF_Lkas_HbaOpt",
-    "CF_Lkas_FcwSysState",
-    "CF_Lkas_FcwCollisionWarning",
-    "CF_Lkas_FusionState",
-    "CF_Lkas_FcwOpt_USM",
-    "CF_Lkas_LdwsOpt_USM",
-  ]}
+  if not lkas11:
+        values = {
+      "CF_Lkas_LdwsActivemode": 0,
+      "CF_Lkas_LdwsSysState": 0,
+      "CF_Lkas_SysWarning": 0,
+      "CF_Lkas_LdwsLHWarning": 0,
+      "CF_Lkas_LdwsRHWarning": 0,
+      "CF_Lkas_HbaLamp": 0,
+      "CF_Lkas_FcwBasReq": 0,
+      "CF_Lkas_HbaSysState": 0,
+      "CF_Lkas_FcwOpt": 0,
+      "CF_Lkas_HbaOpt": 0,
+      "CF_Lkas_FcwSysState": 0,
+      "CF_Lkas_FcwCollisionWarning": 0,
+      "CF_Lkas_FusionState": 0,
+      "CF_Lkas_FcwOpt_USM": 0,
+      "CF_Lkas_LdwsOpt_USM": 0,
+    }
+  else:
+        values = {s: lkas11[s] for s in [
+      "CF_Lkas_LdwsActivemode",
+      "CF_Lkas_LdwsSysState",
+      "CF_Lkas_SysWarning",
+      "CF_Lkas_LdwsLHWarning",
+      "CF_Lkas_LdwsRHWarning",
+      "CF_Lkas_HbaLamp",
+      "CF_Lkas_FcwBasReq",
+      "CF_Lkas_HbaSysState",
+      "CF_Lkas_FcwOpt",
+      "CF_Lkas_HbaOpt",
+      "CF_Lkas_FcwSysState",
+      "CF_Lkas_FcwCollisionWarning",
+      "CF_Lkas_FusionState",
+      "CF_Lkas_FcwOpt_USM",
+      "CF_Lkas_LdwsOpt_USM",
+    ]}
+
   values["CF_Lkas_LdwsSysState"] = sys_state
   values["CF_Lkas_SysWarning"] = 3 if sys_warning else 0
   values["CF_Lkas_LdwsLHWarning"] = left_lane_depart
