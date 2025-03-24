@@ -200,7 +200,10 @@ class CarState(CarStateBase):
       ret.rightBlindspot = cp.vl["LCA11"]["CF_Lca_IndRight"] != 0
 
     # save the entire LKAS11 and CLU11
-    self.lkas11 = copy.copy(cp_cam.vl["LKAS11"])
+    self.lkas11 = None
+    if not self.CP.spFlags & HyundaiFlagsSP.SP_NON_LKAS.value:
+      self.lkas11 = copy.copy(cp_cam.vl["LKAS11"])
+
     self.clu11 = copy.copy(cp.vl["CLU11"])
     # only forward FCA messages for FCW/AEB when using openpilot longitudinal on Camera SCC cars
     if self.CP.openpilotLongitudinalControl and self.CP.carFingerprint in CAMERA_SCC_CAR:
@@ -400,9 +403,12 @@ class CarState(CarStateBase):
     if CP.carFingerprint in CANFD_CAR:
       return CarState.get_cam_can_parser_canfd(CP)
 
-    messages = [
-      ("LKAS11", 100),
-    ]
+    messages = []
+
+    if not CP.flags & HyundaiFlagsSP.SP_NON_LKAS.value:
+      messages += [
+        ("LKAS11", 100),
+      ]
 
     if not CP.openpilotLongitudinalControl and CP.carFingerprint in (CAMERA_SCC_CAR | (NON_SCC_FCA_CAR - NON_SCC_RADAR_FCA_CAR)):
       if CP.carFingerprint in CAMERA_SCC_CAR:

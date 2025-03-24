@@ -83,6 +83,9 @@ class CarInterface(CarInterfaceBase):
 
       if 0x53E in fingerprint[2]:
         ret.spFlags |= HyundaiFlagsSP.SP_LKAS12.value
+      
+      if 0x340 not in fingerprint[2]:
+        ret.spFlags |= HyundaiFlagsSP.SP_NON_LKAS.value
 
     ret.steerActuatorDelay = 0.1  # Default delay
     ret.steerLimitTimer = 0.4
