@@ -405,7 +405,7 @@ class CarState(CarStateBase):
 
     messages = []
 
-    if not CP.spFlags & HyundaiFlagsSP.SP_NON_LKAS.value:
+    if not CP.spFlags & HyundaiFlagsSP.SP_NON_LKAS:
       messages += [
         ("LKAS11", 100),
       ]
