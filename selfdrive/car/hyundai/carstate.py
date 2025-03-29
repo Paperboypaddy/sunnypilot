@@ -104,7 +104,7 @@ class CarState(CarStateBase):
 
     ret.vEgoCluster = self.cluster_speed * speed_conv
 
-    ret.steeringAngleDeg = cp.vl["SAS11"]["SAS_Angle"]
+    ret.steeringAngleDeg = cp.vl["SAS11"]["SAS_Angle"] - 25.0
     ret.steeringRateDeg = cp.vl["SAS11"]["SAS_Speed"]
     ret.yawRate = cp.vl["ESP12"]["YAW_RATE"]
     ret.leftBlinker, ret.rightBlinker = ret.leftBlinkerOn, ret.rightBlinkerOn = self.update_blinker_from_lamp(
