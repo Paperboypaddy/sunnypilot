@@ -24,7 +24,7 @@ def create_lkas11(packer, frame, CP, apply_steer, steer_req,
       "CF_Lkas_FcwCollisionWarning": 0,
       "CF_Lkas_FusionState": 0,
       "CF_Lkas_FcwOpt_USM": 0,
-      "CF_Lkas_LdwsOpt_USM": 0,
+      "CF_Lkas_LdwsOpt_USM": 2,
     }
   else:
         values = {s: lkas11[s] for s in [

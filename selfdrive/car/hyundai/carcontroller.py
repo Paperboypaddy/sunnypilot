@@ -38,9 +38,9 @@ def process_hud_alert(enabled, fingerprint, hud_control):
   left_lane_warning = 0
   right_lane_warning = 0
   if hud_control.leftLaneDepart:
-    left_lane_warning = 1 if fingerprint in (CAR.GENESIS_G90, CAR.GENESIS_G80) else 2
+    left_lane_warning = 1 if fingerprint in (CAR.GENESIS_G90, CAR.GENESIS_G80, CAR.HYUNDAI_IONIQ_NON_LKAS) else 2
   if hud_control.rightLaneDepart:
-    right_lane_warning = 1 if fingerprint in (CAR.GENESIS_G90, CAR.GENESIS_G80) else 2
+    right_lane_warning = 1 if fingerprint in (CAR.GENESIS_G90, CAR.GENESIS_G80, CAR.HYUNDAI_IONIQ_NON_LKAS) else 2
 
   return sys_warning, sys_state, left_lane_warning, right_lane_warning
 
