@@ -119,6 +119,14 @@ SPVehiclesTogglesPanel::SPVehiclesTogglesPanel(VehiclePanel *parent) : ListWidge
   hyundaiCruiseMainDefault->setConfirmation(true, false);
   addItem(hyundaiCruiseMainDefault);
 
+  hyundaiEmulatedSCC = new ParamControlSP(
+    "HkgEmulatedSCC",
+    tr("HKG CAN: Enable Emulated SCC (Beta)"),
+    tr("Enabling this only if your vehicle is modified to support emulated SCC (OpenPilot sends SCC messages). Used for cars missing SCC."),
+    "../assets/offroad/icon_blank.png"
+  );
+  addItem(hyundaiEmulatedSCC);
+
   // Subaru
   addItem(new LabelControlSP(tr("Subaru")));
   auto subaruManualParkingBrakeSng = new ParamControlSP(

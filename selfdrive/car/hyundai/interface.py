@@ -83,7 +83,7 @@ class CarInterface(CarInterfaceBase):
 
       if 0x53E in fingerprint[2]:
         ret.spFlags |= HyundaiFlagsSP.SP_LKAS12.value
-      
+
       if 0x340 not in fingerprint[2]:
         ret.spFlags |= HyundaiFlagsSP.SP_NON_LKAS.value
 
@@ -100,7 +100,9 @@ class CarInterface(CarInterfaceBase):
       if ret.flags & HyundaiFlags.CANFD_CAMERA_SCC and not hda2:
         ret.spFlags |= HyundaiFlagsSP.SP_CAMERA_SCC_LEAD.value
     else:
-      ret.experimentalLongitudinalAvailable = candidate not in (UNSUPPORTED_LONGITUDINAL_CAR | NON_SCC_CAR)
+      if Params().get_bool("HkgEmulatedSCC"):
+        ret.spFlags |= HyundaiFlagsSP.SP_EMULATED_SCC.value
+      ret.experimentalLongitudinalAvailable = candidate not in (UNSUPPORTED_LONGITUDINAL_CAR | NON_SCC_CAR) or (ret.spFlags & HyundaiFlagsSP.SP_EMULATED_SCC)
       if candidate in CAMERA_SCC_CAR:
         ret.spFlags |= HyundaiFlagsSP.SP_CAMERA_SCC_LEAD.value
     ret.openpilotLongitudinalControl = experimental_long and ret.experimentalLongitudinalAvailable
@@ -169,6 +171,8 @@ class CarInterface(CarInterfaceBase):
 
     if ret.openpilotLongitudinalControl:
       ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_LONG
+      if ret.spFlags & HyundaiFlagsSP.SP_EMULATED_SCC:
+        ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_EMULATED_SCC
     if ret.flags & HyundaiFlags.HYBRID:
       ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_HYBRID_GAS
     elif ret.flags & HyundaiFlags.EV:

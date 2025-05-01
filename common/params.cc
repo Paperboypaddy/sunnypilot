@@ -263,6 +263,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"HideVEgoUi", PERSISTENT | BACKUP},
     {"HyundaiCruiseMainDefault", PERSISTENT | BACKUP},
     {"HkgSmoothStop", PERSISTENT | BACKUP},
+    {"HkgEmulatedSCC", PERSISTENT | BACKUP},
     {"HotspotOnBoot", PERSISTENT},
     {"HotspotOnBootConfirmed", PERSISTENT},
     {"HyundaiRadarTracksAvailable", PERSISTENT},
