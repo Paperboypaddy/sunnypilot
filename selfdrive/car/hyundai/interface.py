@@ -102,7 +102,7 @@ class CarInterface(CarInterfaceBase):
     else:
       if Params().get_bool("HkgEmulatedSCC"):
         ret.spFlags |= HyundaiFlagsSP.SP_EMULATED_SCC.value
-      ret.experimentalLongitudinalAvailable = candidate not in (UNSUPPORTED_LONGITUDINAL_CAR | NON_SCC_CAR) or (ret.spFlags & HyundaiFlagsSP.SP_EMULATED_SCC)
+      ret.experimentalLongitudinalAvailable = candidate not in (UNSUPPORTED_LONGITUDINAL_CAR | NON_SCC_CAR) or Params().get_bool("HkgEmulatedSCC")
       if candidate in CAMERA_SCC_CAR:
         ret.spFlags |= HyundaiFlagsSP.SP_CAMERA_SCC_LEAD.value
     ret.openpilotLongitudinalControl = experimental_long and ret.experimentalLongitudinalAvailable
