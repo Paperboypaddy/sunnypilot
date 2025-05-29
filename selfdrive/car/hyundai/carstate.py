@@ -116,7 +116,7 @@ class CarState(CarStateBase):
     ret.steeringTorque = cp_mdps.vl["MDPS12"]["CR_Mdps_StrColTq"]
     ret.steeringTorqueEps = cp_mdps.vl["MDPS12"]["CR_Mdps_OutTq"]
     ret.steeringPressed = self.update_steering_pressed(abs(ret.steeringTorque) > self.params.STEER_THRESHOLD, 5)
-    ret.steerFaultTemporary = cp_mdps.vl["MDPS12"]["CF_Mdps_ToiUnavail"] != 0 or cp.vl["MDPS12"]["CF_Mdps_ToiFlt"] != 0
+    ret.steerFaultTemporary = cp_mdps.vl["MDPS12"]["CF_Mdps_ToiUnavail"] != 0 or cp_mdps.vl["MDPS12"]["CF_Mdps_ToiFlt"] != 0
 
     # cruise state
     if self.CP.openpilotLongitudinalControl:
