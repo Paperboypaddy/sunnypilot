@@ -136,6 +136,9 @@ class CarInterface(CarInterfaceBase):
         if Params().get_bool("HyundaiRadarTracksAvailable"):
           ret.radarUnavailable = False
 
+      ret.mdpsBus = 2 if 0x251 in fingerprint[2] else 0
+      ret.sasBus = 2 if 0x2B0 in fingerprint[2] else 0
+
     # *** panda safety config ***
     if candidate in CANFD_CAR:
       cfgs = [get_safety_config(car.CarParams.SafetyModel.hyundaiCanfd), ]

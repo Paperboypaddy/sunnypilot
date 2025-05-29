@@ -139,6 +139,12 @@ class CarController(CarControllerBase):
     if not CC.latActive:
       apply_steer = 0
 
+    #Clu11 for MDPS
+    clu11_speed = CS.clu11["CF_Clu_Vanz"]
+    enabled_speed = 38 if CS.clu11["CF_Clu_SPEED_UNIT"] == 1 else 60
+    if clu11_speed > enabled_speed:
+      enabled_speed = clu11_speed
+
     # Hold torque with induced temporary fault when cutting the actuation bit
     torque_fault = CC.latActive and not apply_steer_req
 
@@ -242,11 +248,15 @@ class CarController(CarControllerBase):
               if self.frame % 2 == 0:
                 can_sends.append(hyundaicanfd.create_buttons(self.packer, self.CP, self.CAN, ((self.frame // 2) + 1) % 0x10, self.cruise_button))
     else:
+      lkas_bus = 2 if CS.mdps_bus == 2 else 0
       can_sends.append(hyundaican.create_lkas11(self.packer, self.frame, self.CP, apply_steer, apply_steer_req,
                                                 torque_fault, CS.lkas11, sys_warning, sys_state, CC.enabled,
                                                 hud_control.leftLaneVisible, hud_control.rightLaneVisible,
                                                 left_lane_warning, right_lane_warning,
-                                                lateral_paused, blinking_icon))
+                                                lateral_paused, blinking_icon, lkas_bus))
+
+      if self.frame % 2 and CS.mdps_bus == 2: # send clu11 to mdps if it is not on bus 0
+        can_sends.append(hyundaican.create_clu11(self.packer, self.frame, CS.clu11, Buttons.NONE, enabled_speed, self.CP))
 
       if not self.CP.openpilotLongitudinalControl:
         can_sends.extend(self.create_button_messages(CC, CS, use_clu11=True))

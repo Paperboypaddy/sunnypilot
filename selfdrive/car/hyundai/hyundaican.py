@@ -7,7 +7,7 @@ def create_lkas11(packer, frame, CP, apply_steer, steer_req,
                   torque_fault, lkas11, sys_warning, sys_state, enabled,
                   left_lane, right_lane,
                   left_lane_depart, right_lane_depart,
-                  lateral_paused, blinking_icon):
+                  lateral_paused, blinking_icon, bus):
   if not lkas11:
         values = {
       "CF_Lkas_LdwsActivemode": 0,
@@ -116,10 +116,10 @@ def create_lkas11(packer, frame, CP, apply_steer, steer_req,
 
   values["CF_Lkas_Chksum"] = checksum
 
-  return packer.make_can_msg("LKAS11", 0, values)
+  return packer.make_can_msg("LKAS11", bus, values)
 
 
-def create_clu11(packer, frame, clu11, button, CP):
+def create_clu11(packer, frame, clu11, button, speed, CP):
   values = {s: clu11[s] for s in [
     "CF_Clu_CruiseSwState",
     "CF_Clu_CruiseSwMain",
@@ -135,9 +135,10 @@ def create_clu11(packer, frame, clu11, button, CP):
     "CF_Clu_AliveCnt1",
   ]}
   values["CF_Clu_CruiseSwState"] = button
+  values["CF_Clu_Vanz"] = speed
   values["CF_Clu_AliveCnt1"] = frame % 0x10
   # send buttons to camera on camera-scc based cars
-  bus = 2 if CP.flags & HyundaiFlags.CAMERA_SCC else 0
+  bus = 2 if (CP.flags & HyundaiFlags.CAMERA_SCC) or (CP.mdpsBus == 2) else 0
   return packer.make_can_msg("CLU11", bus, values)
 
 

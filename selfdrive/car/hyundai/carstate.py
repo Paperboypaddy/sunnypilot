@@ -61,6 +61,8 @@ class CarState(CarStateBase):
     self.escc_cmd_act = 0
     self.escc_aeb_dec_cmd = 0
     self._speed_limit_clu = 0
+    self.mdps_bus = CP.mdpsBus
+    self.sas_bus = CP.sasBus
 
   def get_main_enabled(self, ret) -> bool:
     if self.prev_main_buttons != 1 and self.main_buttons[-1] == 1:
@@ -338,7 +340,6 @@ class CarState(CarStateBase):
 
     messages = [
       # address, frequency
-      ("MDPS12", 50),
       ("TCS11", 100),
       ("TCS13", 50),
       ("TCS15", 10),
@@ -349,8 +350,17 @@ class CarState(CarStateBase):
       ("CGW2", 5),
       ("CGW4", 5),
       ("WHL_SPD11", 50),
-      ("SAS11", 100),
     ]
+
+    if CP.mdpsBus == 0:
+      messages += [
+        ("MDPS12", 50),
+      ]
+
+    if CP.sasBus == 0:
+      messages += [
+        ("SAS11", 100),
+      ]
 
     if not CP.openpilotLongitudinalControl and CP.carFingerprint not in (CAMERA_SCC_CAR | (NON_SCC_CAR - NON_SCC_RADAR_FCA_CAR)):
       if CP.carFingerprint not in NON_SCC_CAR:
@@ -408,6 +418,16 @@ class CarState(CarStateBase):
     if not CP.spFlags & HyundaiFlagsSP.SP_NON_LKAS:
       messages += [
         ("LKAS11", 100),
+      ]
+
+    if CP.mdpsBus == 2:
+      messages += [
+        ("MDPS12", 50),
+      ]
+
+    if CP.sasBus == 2:
+      messages += [
+        ("SAS11", 100),
       ]
 
     if not CP.openpilotLongitudinalControl and CP.carFingerprint in (CAMERA_SCC_CAR | (NON_SCC_FCA_CAR - NON_SCC_RADAR_FCA_CAR)):
