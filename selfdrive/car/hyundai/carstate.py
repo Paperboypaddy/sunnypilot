@@ -72,6 +72,8 @@ class CarState(CarStateBase):
   def update(self, cp, cp_cam):
     if self.CP.carFingerprint in CANFD_CAR:
       return self.update_canfd(cp, cp_cam)
+    cp_mdps = cp_cam if self.mdps_bus == 2 else cp
+    cp_sas = cp_cam if self.sas_bus == 2 else cp
 
     ret = car.CarState.new_message()
     cp_cruise = cp_cam if self.CP.carFingerprint in (CAMERA_SCC_CAR | (NON_SCC_FCA_CAR - NON_SCC_RADAR_FCA_CAR)) else cp
@@ -106,15 +108,15 @@ class CarState(CarStateBase):
 
     ret.vEgoCluster = self.cluster_speed * speed_conv
 
-    ret.steeringAngleDeg = cp.vl["SAS11"]["SAS_Angle"] - 25.0
-    ret.steeringRateDeg = cp.vl["SAS11"]["SAS_Speed"]
+    ret.steeringAngleDeg = cp_sas.vl["SAS11"]["SAS_Angle"] - 25.0
+    ret.steeringRateDeg = cp_sas.vl["SAS11"]["SAS_Speed"]
     ret.yawRate = cp.vl["ESP12"]["YAW_RATE"]
     ret.leftBlinker, ret.rightBlinker = ret.leftBlinkerOn, ret.rightBlinkerOn = self.update_blinker_from_lamp(
       50, cp.vl["CGW1"]["CF_Gway_TurnSigLh"], cp.vl["CGW1"]["CF_Gway_TurnSigRh"])
-    ret.steeringTorque = cp.vl["MDPS12"]["CR_Mdps_StrColTq"]
-    ret.steeringTorqueEps = cp.vl["MDPS12"]["CR_Mdps_OutTq"]
+    ret.steeringTorque = cp_mdps.vl["MDPS12"]["CR_Mdps_StrColTq"]
+    ret.steeringTorqueEps = cp_mdps.vl["MDPS12"]["CR_Mdps_OutTq"]
     ret.steeringPressed = self.update_steering_pressed(abs(ret.steeringTorque) > self.params.STEER_THRESHOLD, 5)
-    ret.steerFaultTemporary = cp.vl["MDPS12"]["CF_Mdps_ToiUnavail"] != 0 or cp.vl["MDPS12"]["CF_Mdps_ToiFlt"] != 0
+    ret.steerFaultTemporary = cp_mdps.vl["MDPS12"]["CF_Mdps_ToiUnavail"] != 0 or cp.vl["MDPS12"]["CF_Mdps_ToiFlt"] != 0
 
     # cruise state
     if self.CP.openpilotLongitudinalControl:
@@ -211,7 +213,7 @@ class CarState(CarStateBase):
     if self.CP.openpilotLongitudinalControl and self.CP.carFingerprint in CAMERA_SCC_CAR:
       self.fca11 = copy.copy(cp_cruise.vl["FCA11"])
       self.fca12 = copy.copy(cp_cruise.vl["FCA12"])
-    self.steer_state = cp.vl["MDPS12"]["CF_Mdps_ToiActive"]  # 0 NOT ACTIVE, 1 ACTIVE
+    self.steer_state = cp_mdps.vl["MDPS12"]["CF_Mdps_ToiActive"]  # 0 NOT ACTIVE, 1 ACTIVE
     self.prev_cruise_buttons = self.cruise_buttons[-1]
     self.prev_main_buttons = self.main_buttons[-1]
     self.cruise_buttons.extend(cp.vl_all["CLU11"]["CF_Clu_CruiseSwState"])
